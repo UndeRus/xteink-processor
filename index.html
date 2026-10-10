@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Xteink EPUB</title>
+  <meta name="description" content="Chuyển ebook sang EPUB tối giản cho máy đọc Xteink X3. Xử lý hoàn toàn trên trình duyệt, dùng được offline.">
+  <meta name="theme-color" content="#1f2937">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Xteink EPUB</h1>
+      <p class="sub">Chuyển ebook sang EPUB tối giản cho máy đọc Xteink X3</p>
+    </header>
+
+    <section id="drop" class="drop" tabindex="0" role="button" aria-label="Chọn hoặc kéo thả tệp ebook">
+      <div class="drop-title">Kéo thả ebook vào đây</div>
+      <div class="drop-or">hoặc</div>
+      <button type="button" id="pick" class="btn">Chọn tệp</button>
+      <input id="file" type="file" hidden
+        accept=".epub,.azw3,.azw,.mobi,.prc,.txt,.html,.htm,.xhtml,.fb2">
+      <div class="formats">EPUB · AZW3 · AZW · MOBI · PRC · TXT · HTML · FB2</div>
+    </section>
+
+    <section id="progress" class="card" hidden aria-live="polite">
+      <div id="fname" class="fname"></div>
+      <div class="bar"><div id="barfill"></div></div>
+      <div id="stage" class="stage"></div>
+    </section>
+
+    <section id="done" class="card" hidden>
+      <div class="ok">Đã chuyển đổi xong</div>
+      <div id="summary" class="stage"></div>
+      <a id="download" class="btn primary" href="#">Tải xuống</a>
+      <button type="button" id="again" class="link">Chuyển tệp khác</button>
+    </section>
+
+    <section id="error" class="card error" hidden role="alert">
+      <div class="ok">Không chuyển đổi được</div>
+      <div id="errmsg" class="stage"></div>
+      <button type="button" id="retry" class="link">Thử tệp khác</button>
+    </section>
+
+    <footer>
+      <span id="offline" class="badge">Đang chuẩn bị offline…</span>
+      <p>Mọi thao tác chạy ngay trên máy của bạn, tệp không được tải lên đâu cả.</p>
+    </footer>
+  </main>
+
+  <script src="vendor/jszip.min.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
