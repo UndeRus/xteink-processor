@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dist = join(root, 'dist');
 
-rmSync(dist, { recursive: true, force: true });
+try { rmSync(dist, { recursive: true, force: true }); } catch { /* ignore locked dir */ }
 mkdirSync(dist, { recursive: true });
 
 const entries = [

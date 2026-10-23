@@ -3,6 +3,7 @@ import { UserError, extOf, baseName, cleanText, safeFileName } from './util.js';
 import { normalize } from './normalize.js';
 import { processCover } from './cover.js';
 import { writeEpub } from './writer.js';
+import { buildXtcBlob } from './xtc.js';
 import { t } from './i18n.js';
 
 export const SUPPORTED = ['epub', 'azw3', 'azw', 'mobi', 'prc', 'txt', 'html', 'htm', 'xhtml', 'fb2'];
@@ -20,13 +21,22 @@ async function readerFor(ext) {
 }
 
 /** @returns {Promise<{blob:Blob, filename:string, chapters:number, hasCover:boolean}>} */
-export async function convert(file, report = () => {}) {
+export async function convert(file, report = () => {}, options = {}) {
   const ext = extOf(file.name);
   report(t('conv.reading'), 0.02);
   const read = await readerFor(ext);
   const book = await read(file, (msg, f) => report(msg, 0.05 + 0.4 * (f || 0)));
   report(t('conv.processing'), 0.5);
   const chapters = await normalize(book, (msg, f) => report(msg, 0.5 + 0.3 * (f || 0)));
+  const outputFormat = options.outputFormat || 'epub';
+  const typography = options.typography || {};
+  if (outputFormat === 'xtc' || outputFormat === 'xtch') {
+    report(t('conv.packaging'), 0.92);
+    const grayscale = outputFormat === 'xtch';
+    const res = await buildXtcBlob(book, chapters, typography, grayscale);
+    report(t('conv.done'), 1);
+    return { blob: res.blob, filename: res.filename, chapters: res.chapters, hasCover: false, pages: res.pages };
+  }
   report(t('conv.cover'), 0.85);
   const cover = await processCover(book.cover);
   report(t('conv.packaging'), 0.92);

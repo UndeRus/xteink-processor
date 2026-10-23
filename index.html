@@ -26,6 +26,30 @@
       </label>
     </header>
 
+    <section class="card settings">
+      <label class="setting">
+        <span data-i18n="settings.format">Định dạng xuất</span>
+        <select id="format">
+          <option value="epub">EPUB</option>
+          <option value="xtc">XTC</option>
+          <option value="xtch">XTCH</option>
+        </select>
+      </label>
+      <details id="adv">
+        <summary data-i18n="settings.advanced">Cài đặt nâng cao</summary>
+        <label class="setting"><span data-i18n="settings.fontSize">Cỡ chữ</span><input id="fontSize" type="number" min="12" max="32" value="20"></label>
+        <label class="setting"><span data-i18n="settings.lineHeight">Giãn dòng</span><input id="lineHeight" type="number" min="1.1" max="2.0" step="0.1" value="1.4"></label>
+        <label class="setting"><span data-i18n="settings.margin">Lề</span><input id="margin" type="number" min="16" max="80" value="40"></label>
+        <label class="setting"><span data-i18n="settings.fontFamily">Phông</span>
+          <select id="fontFamily">
+            <option value="serif">Serif</option>
+            <option value="sans-serif">Sans-serif</option>
+            <option value="monospace">Monospace</option>
+          </select>
+        </label>
+      </details>
+    </section>
+
     <section id="drop" class="drop" tabindex="0" role="button" aria-label="Chọn hoặc kéo thả tệp ebook">
       <div class="drop-title" data-i18n="drop.title">Kéo thả ebook vào đây</div>
       <div class="drop-or" data-i18n="drop.or">hoặc</div>

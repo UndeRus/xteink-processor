@@ -52,3 +52,8 @@ footer { margin-top: 32px; text-align: center; color: var(--muted); font-size: .
 .archive-list li { margin: 6px 0; }
 .archive-list button { width: 100%; text-align: left; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--fg); cursor: pointer; font: inherit; }
 .archive-list button:hover { border-color: var(--accent); }
+.settings { text-align: left; }
+.setting { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 8px 0; font-size: .95rem; }
+.setting input, .setting select { font: inherit; padding: 4px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--fg); width: 120px; }
+details { margin-top: 8px; }
+summary { cursor: pointer; color: var(--muted); }

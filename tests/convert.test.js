@@ -13,3 +13,11 @@ test('convert txt produces epub blob', async () => {
   assert.match(res.filename, /\.epub$/);
   assert.ok(res.chapters >= 1);
 });
+
+test('convert txt to xtc produces xtc blob', async () => {
+  const buf = readFileSync(new URL('./fixtures/sample.txt', import.meta.url));
+  const file = new File([buf], 'sample.txt', { type: 'text/plain' });
+  const res = await convert(file, () => {}, { outputFormat: 'xtc' });
+  assert.ok(res.blob.size > 0);
+  assert.match(res.filename, /\.xtc$/);
+});

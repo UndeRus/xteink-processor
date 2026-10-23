@@ -59,6 +59,21 @@ async function handleFile(file) {
   await runConvert(file);
 }
 
+function readOptions() {
+  return {
+    outputFormat: $('format').value,
+    typography: {
+      fontSize: Number($('fontSize').value) || 20,
+      lineHeight: Number($('lineHeight').value) || 1.4,
+      marginTop: Number($('margin').value) || 40,
+      marginBottom: Number($('margin').value) || 40,
+      marginLeft: Number($('margin').value) || 40,
+      marginRight: Number($('margin').value) || 40,
+      fontFamily: $('fontFamily').value || 'serif',
+    },
+  };
+}
+
 async function runConvert(file) {
   busy = true;
   $('fname').textContent = file.name;
@@ -69,14 +84,15 @@ async function runConvert(file) {
     const res = await convert(file, (msg, frac) => {
       $('stage').textContent = msg;
       $('barfill').style.width = `${Math.round(Math.max(0.02, Math.min(1, frac)) * 100)}%`;
-    });
+    }, readOptions());
     currentUrl = URL.createObjectURL(res.blob);
     const a = $('download');
     a.href = currentUrl;
     a.download = res.filename;
     a.textContent = t('download', { filename: res.filename });
+    const extra = res.pages ? ` · ${res.pages} pages` : (res.hasCover ? t('coverSuffix') : '');
     $('summary').textContent =
-      t('summary', { chapters: res.chapters, size: formatSize(res.blob.size), cover: res.hasCover ? t('coverSuffix') : '' });
+      t('summary', { chapters: res.chapters, size: formatSize(res.blob.size), cover: extra });
     show('done');
   } catch (e) {
     console.error(e);
