@@ -22,6 +22,9 @@ function applyI18n() {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     el.textContent = t(el.dataset.i18n);
   });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+    el.setAttribute('aria-label', t(el.dataset.i18nAria));
+  });
   const sel = $('lang');
   if (sel && sel.value !== getLang()) sel.value = getLang();
   const badge = $('offline');

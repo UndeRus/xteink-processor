@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title data-i18n="app.title">Xteink EPUB</title>
-  <meta name="description" content="Chuyển ebook sang EPUB tối giản cho máy đọc Xteink X3. Xử lý hoàn toàn trên trình duyệt, dùng được offline.">
+  <meta name="description" content="Convert ebooks to minimal EPUB/XTC for the Xteink X3 reader. Runs entirely in the browser, works offline.">
   <meta name="theme-color" content="#1f2937">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" href="icons/icon-192.png">
@@ -15,9 +15,9 @@
   <main>
     <header>
       <h1 data-i18n="app.title">Xteink EPUB</h1>
-      <p class="sub" data-i18n="app.subtitle">Chuyển ebook sang EPUB tối giản cho máy đọc Xteink X3</p>
+      <p class="sub" data-i18n="app.subtitle">Convert ebooks to minimal EPUB/XTC for Xteink X3</p>
       <label class="lang">
-        <span data-i18n="lang.label">Ngôn ngữ</span>
+        <span data-i18n="lang.label">Language</span>
         <select id="lang">
           <option value="vi">Tiếng Việt</option>
           <option value="en">English</option>
@@ -28,7 +28,7 @@
 
     <section class="card settings">
       <label class="setting">
-        <span data-i18n="settings.format">Định dạng xuất</span>
+        <span data-i18n="settings.format">Output format</span>
         <select id="format">
           <option value="epub">EPUB</option>
           <option value="xtc">XTC</option>
@@ -36,11 +36,11 @@
         </select>
       </label>
       <details id="adv">
-        <summary data-i18n="settings.advanced">Cài đặt nâng cao</summary>
-        <label class="setting"><span data-i18n="settings.fontSize">Cỡ chữ</span><input id="fontSize" type="number" min="12" max="32" value="20"></label>
-        <label class="setting"><span data-i18n="settings.lineHeight">Giãn dòng</span><input id="lineHeight" type="number" min="1.1" max="2.0" step="0.1" value="1.4"></label>
-        <label class="setting"><span data-i18n="settings.margin">Lề</span><input id="margin" type="number" min="16" max="80" value="40"></label>
-        <label class="setting"><span data-i18n="settings.fontFamily">Phông</span>
+        <summary data-i18n="settings.advanced">Advanced settings</summary>
+        <label class="setting"><span data-i18n="settings.fontSize">Font size</span><input id="fontSize" type="number" min="12" max="32" value="20"></label>
+        <label class="setting"><span data-i18n="settings.lineHeight">Line height</span><input id="lineHeight" type="number" min="1.1" max="2.0" step="0.1" value="1.4"></label>
+        <label class="setting"><span data-i18n="settings.margin">Margin</span><input id="margin" type="number" min="16" max="80" value="40"></label>
+        <label class="setting"><span data-i18n="settings.fontFamily">Font family</span>
           <select id="fontFamily">
             <option value="serif">Serif</option>
             <option value="sans-serif">Sans-serif</option>
@@ -50,19 +50,19 @@
       </details>
     </section>
 
-    <section id="drop" class="drop" tabindex="0" role="button" aria-label="Chọn hoặc kéo thả tệp ebook">
-      <div class="drop-title" data-i18n="drop.title">Kéo thả ebook vào đây</div>
-      <div class="drop-or" data-i18n="drop.or">hoặc</div>
-      <button type="button" id="pick" class="btn" data-i18n="drop.pick">Chọn tệp</button>
+    <section id="drop" class="drop" tabindex="0" role="button" aria-label="Choose or drop an ebook file" data-i18n-aria="drop.aria">
+      <div class="drop-title" data-i18n="drop.title">Drop an ebook here</div>
+      <div class="drop-or" data-i18n="drop.or">or</div>
+      <button type="button" id="pick" class="btn" data-i18n="drop.pick">Choose file</button>
       <input id="file" type="file" hidden
         accept=".epub,.azw3,.azw,.mobi,.prc,.txt,.html,.htm,.xhtml,.fb2,.zip,.rar,.7z,.tar,.tgz,.gz">
       <div class="formats" data-i18n="drop.formats">EPUB · AZW3 · AZW · MOBI · PRC · TXT · HTML · FB2 · ZIP · RAR · 7Z</div>
     </section>
 
     <section id="archive" class="card" hidden>
-      <div class="ok" data-i18n="archive.title">Chọn sách trong tệp nén</div>
+      <div class="ok" data-i18n="archive.title">Choose a book in the archive</div>
       <ul id="archive-list" class="archive-list"></ul>
-      <button type="button" id="archive-cancel" class="link" data-i18n="archive.cancel">Hủy</button>
+      <button type="button" id="archive-cancel" class="link" data-i18n="archive.cancel">Cancel</button>
     </section>
 
     <section id="progress" class="card" hidden aria-live="polite">
@@ -72,21 +72,21 @@
     </section>
 
     <section id="done" class="card" hidden>
-      <div class="ok" data-i18n="done.ok">Chuyển đổi xong</div>
+      <div class="ok" data-i18n="done.ok">Conversion finished</div>
       <div id="summary" class="stage"></div>
-      <a id="download" class="btn primary" href="#">Tải xuống</a>
-      <button type="button" id="again" class="link" data-i18n="again">Chuyển tệp khác</button>
+      <a id="download" class="btn primary" href="#">Download</a>
+      <button type="button" id="again" class="link" data-i18n="again">Convert another file</button>
     </section>
 
     <section id="error" class="card error" hidden role="alert">
-      <div class="ok" data-i18n="error.ok">Không chuyển đổi được</div>
+      <div class="ok" data-i18n="error.ok">Conversion failed</div>
       <div id="errmsg" class="stage"></div>
-      <button type="button" id="retry" class="link" data-i18n="retry">Thử tệp khác</button>
+      <button type="button" id="retry" class="link" data-i18n="retry">Try another file</button>
     </section>
 
     <footer>
-      <span id="offline" class="badge">Đang chuẩn bị offline…</span>
-      <p data-i18n="footer.note">Mọi thao tác chạy ngay trên máy của bạn, tệp không được tải lên đâu.</p>
+      <span id="offline" class="badge">Preparing offline…</span>
+      <p data-i18n="footer.note">Everything runs on your device; files are never uploaded.</p>
     </footer>
   </main>
 
