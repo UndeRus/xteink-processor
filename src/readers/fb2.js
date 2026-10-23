@@ -1,5 +1,6 @@
 // Đọc FB2: <section><title> là chương, <binary> chỉ dùng để lấy bìa.
 import { UserError, baseName, cleanText, decodeMarkup, parseXml } from '../util.js';
+import { t } from '../i18n.js';
 
 const kids = (el, name) => Array.from(el.children).filter(c => c.localName === name);
 const first = (root, name) => Array.from(root.getElementsByTagName('*')).find(e => e.localName === name);
@@ -9,7 +10,7 @@ export async function readFb2(file) {
   const bytes = new Uint8Array(await file.arrayBuffer());
   const xml = parseXml(decodeMarkup(bytes));
   if (!xml || xml.documentElement.localName !== 'FictionBook') {
-    throw new UserError('Tệp FB2 không hợp lệ hoặc bị hỏng.');
+    throw new UserError(t('err.fb2.invalid'));
   }
   const root = xml.documentElement;
   const titleInfo = first(root, 'title-info');
@@ -59,7 +60,7 @@ export async function readFb2(file) {
       else if (c.localName === 'epigraph') blockText(c);
     }
   }
-  if (!out.body.textContent.trim()) throw new UserError('Tệp FB2 không có nội dung.');
+  if (!out.body.textContent.trim()) throw new UserError(t('err.fb2.empty'));
 
   // bìa
   let cover = null;

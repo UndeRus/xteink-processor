@@ -1,18 +1,19 @@
 // Đọc MOBI/AZW/AZW3/KF8/PRC bằng mobi.js của foliate-js.
 import { MOBI, isMOBI } from '../../vendor/foliate-mobi.js';
 import { UserError, baseName, tick, cleanText } from '../util.js';
+import { t } from '../i18n.js';
 
-const DRM_MSG = 'Sách này được bảo vệ bản quyền (DRM) nên không thể chuyển đổi. Hãy dùng bản không có DRM.';
+// DRM message resolved via t('err.mobi.drm') at throw site.
 
 async function precheck(file) {
   const head = new DataView(await file.slice(0, 90).arrayBuffer());
-  if (head.byteLength < 90) throw new UserError('Tệp quá nhỏ hoặc bị hỏng.');
+  if (head.byteLength < 90) throw new UserError(t('err.mobi.small'));
   if (!(await isMOBI(file))) {
-    throw new UserError('Không nhận dạng được định dạng Kindle/MOBI (có thể là PalmDOC cũ hoặc tệp bị hỏng).');
+    throw new UserError(t('err.mobi.unknown'));
   }
   const rec0 = head.getUint32(78);
   const rec = new DataView(await file.slice(rec0, rec0 + 16).arrayBuffer());
-  if (rec.byteLength >= 14 && rec.getUint16(12) !== 0) throw new UserError(DRM_MSG);
+  if (rec.byteLength >= 14 && rec.getUint16(12) !== 0) throw new UserError(t('err.mobi.drm'));
 }
 
 export async function readMobi(file, report) {
@@ -23,7 +24,7 @@ export async function readMobi(file, report) {
   } catch (e) {
     if (e instanceof UserError) throw e;
     console.warn(e);
-    throw new UserError('Không đọc được tệp MOBI/AZW. Tệp có thể bị hỏng, có DRM hoặc là định dạng không được hỗ trợ.');
+    throw new UserError(t('err.mobi.read'));
   }
 
   const docs = [];
@@ -39,7 +40,7 @@ export async function readMobi(file, report) {
     sectionDocs.set(i, entry);
     if (i % 6 === 0) { report && report(`Đang đọc nội dung (${i + 1}/${n})…`, i / n); await tick(); }
   }
-  if (!docs.length) throw new UserError('Không đọc được nội dung của tệp MOBI/AZW.');
+  if (!docs.length) throw new UserError(t('err.mobi.nocontent'));
 
   // TOC: href dạng filepos:N hoặc kindle:pos:... -> doc + id phần tử
   const toc = [];

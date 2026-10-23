@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Xteink EPUB</title>
+  <title data-i18n="app.title">Xteink EPUB</title>
   <meta name="description" content="Chuyển ebook sang EPUB tối giản cho máy đọc Xteink X3. Xử lý hoàn toàn trên trình duyệt, dùng được offline.">
   <meta name="theme-color" content="#1f2937">
   <link rel="manifest" href="manifest.webmanifest">
@@ -14,17 +14,31 @@
 <body>
   <main>
     <header>
-      <h1>Xteink EPUB</h1>
-      <p class="sub">Chuyển ebook sang EPUB tối giản cho máy đọc Xteink X3</p>
+      <h1 data-i18n="app.title">Xteink EPUB</h1>
+      <p class="sub" data-i18n="app.subtitle">Chuyển ebook sang EPUB tối giản cho máy đọc Xteink X3</p>
+      <label class="lang">
+        <span data-i18n="lang.label">Ngôn ngữ</span>
+        <select id="lang">
+          <option value="vi">Tiếng Việt</option>
+          <option value="en">English</option>
+          <option value="ru">Русский</option>
+        </select>
+      </label>
     </header>
 
     <section id="drop" class="drop" tabindex="0" role="button" aria-label="Chọn hoặc kéo thả tệp ebook">
-      <div class="drop-title">Kéo thả ebook vào đây</div>
-      <div class="drop-or">hoặc</div>
-      <button type="button" id="pick" class="btn">Chọn tệp</button>
+      <div class="drop-title" data-i18n="drop.title">Kéo thả ebook vào đây</div>
+      <div class="drop-or" data-i18n="drop.or">hoặc</div>
+      <button type="button" id="pick" class="btn" data-i18n="drop.pick">Chọn tệp</button>
       <input id="file" type="file" hidden
-        accept=".epub,.azw3,.azw,.mobi,.prc,.txt,.html,.htm,.xhtml,.fb2">
-      <div class="formats">EPUB · AZW3 · AZW · MOBI · PRC · TXT · HTML · FB2</div>
+        accept=".epub,.azw3,.azw,.mobi,.prc,.txt,.html,.htm,.xhtml,.fb2,.zip,.rar,.7z,.tar,.tgz,.gz">
+      <div class="formats" data-i18n="drop.formats">EPUB · AZW3 · AZW · MOBI · PRC · TXT · HTML · FB2 · ZIP · RAR · 7Z</div>
+    </section>
+
+    <section id="archive" class="card" hidden>
+      <div class="ok" data-i18n="archive.title">Chọn sách trong tệp nén</div>
+      <ul id="archive-list" class="archive-list"></ul>
+      <button type="button" id="archive-cancel" class="link" data-i18n="archive.cancel">Hủy</button>
     </section>
 
     <section id="progress" class="card" hidden aria-live="polite">
@@ -34,21 +48,21 @@
     </section>
 
     <section id="done" class="card" hidden>
-      <div class="ok">Đã chuyển đổi xong</div>
+      <div class="ok" data-i18n="done.ok">Chuyển đổi xong</div>
       <div id="summary" class="stage"></div>
       <a id="download" class="btn primary" href="#">Tải xuống</a>
-      <button type="button" id="again" class="link">Chuyển tệp khác</button>
+      <button type="button" id="again" class="link" data-i18n="again">Chuyển tệp khác</button>
     </section>
 
     <section id="error" class="card error" hidden role="alert">
-      <div class="ok">Không chuyển đổi được</div>
+      <div class="ok" data-i18n="error.ok">Không chuyển đổi được</div>
       <div id="errmsg" class="stage"></div>
-      <button type="button" id="retry" class="link">Thử tệp khác</button>
+      <button type="button" id="retry" class="link" data-i18n="retry">Thử tệp khác</button>
     </section>
 
     <footer>
       <span id="offline" class="badge">Đang chuẩn bị offline…</span>
-      <p>Mọi thao tác chạy ngay trên máy của bạn, tệp không được tải lên đâu cả.</p>
+      <p data-i18n="footer.note">Mọi thao tác chạy ngay trên máy của bạn, tệp không được tải lên đâu.</p>
     </footer>
   </main>
 

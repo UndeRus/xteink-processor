@@ -1,5 +1,6 @@
 // Lõi chuyển đổi: các tài liệu đã parse + TOC gốc -> danh sách chương {title, paras[]}.
 import { UserError, cleanText, looksLikeChapterTitle, tick } from './util.js';
+import { t } from './i18n.js';
 
 const SKIP = new Set([
   'script', 'style', 'link', 'meta', 'title', 'head', 'noscript', 'template', 'iframe',
@@ -15,7 +16,7 @@ const BLOCK = new Set([
 const HEADING = /^h([1-6])$/;
 const CLASS_CHAPTER = /(^|[\s_-])(chapter|chap|chapter-?title|chaptertitle|chapter-?heading)([\s_-]|$)/i;
 const CLASS_DROPCAP = /dropcap|drop-cap|drop_cap|first-?letter|initial/i;
-const TOC_TITLE = /^(mục lục|danh mục|table of contents|contents|toc)$/i;
+const TOC_TITLE = /^(mục lục|danh mục|table of contents|contents|toc|оглавление|содержание)$/i;
 const MAX_CHARS = 150000; // tách chương quá dài để máy đọc ít RAM không bị nghẽn
 
 const LETTER = /^\p{L}{1,3}$/u;
@@ -204,7 +205,7 @@ export async function normalize(book, report) {
     flatten(d.doc, d.href, targets.get(d.href), stream);
     d.doc = null; // giải phóng bộ nhớ
     removeInlineToc(stream, start + 1);
-    if (n % 5 === 0) { report && report(`Đang xử lý nội dung (${n}/${docs.length})…`, n / docs.length); await tick(); }
+    if (n % 5 === 0) { report && report(t('conv.processing'), n / docs.length); await tick(); }
   }
 
   const docIndex = new Map();
@@ -243,14 +244,14 @@ export async function normalize(book, report) {
   };
 
   const pre = slice(0, firstPos, null, false);
-  if (pre.length) chapters.push({ title: prefaceTitle || 'Mở đầu', paras: pre });
+  if (pre.length) chapters.push({ title: prefaceTitle || t('chapter.preface'), paras: pre });
   list.forEach((b, k) => {
     const to = k + 1 < list.length ? list[k + 1].pos : stream.length;
     const paras = slice(b.pos, to, b.title, b.skip == null, b.skip || 0);
     if (paras.length) chapters.push({ title: b.title, paras });
   });
 
-  if (!chapters.length) throw new UserError('Không tìm thấy nội dung văn bản trong tệp này.');
+  if (!chapters.length) throw new UserError(t('err.normalize.empty'));
 
   // Tách chương quá dài
   const final = [];
@@ -267,7 +268,7 @@ export async function normalize(book, report) {
     }
     if (part.length) final.push({ title: k === 1 ? ch.title : `${ch.title} (${k})`, paras: part });
   }
-  final.forEach((c, i) => { if (!c.title) c.title = `Phần ${i + 1}`; });
+  final.forEach((c, i) => { if (!c.title) c.title = `${t('chapter.part')} ${i + 1}`; });
   return final;
 }
 
@@ -346,7 +347,7 @@ function boundsFromToc(stream, toc, docIndex, anchorIndex) {
   list.forEach((e, i) => {
     if (!e.title) {
       const c = nextContent(stream, e.pos);
-      e.title = c && c.text.length <= 100 ? c.text : `Phần ${i + 1}`;
+      e.title = c && c.text.length <= 100 ? c.text : `${t('chapter.part')} ${i + 1}`;
     }
   });
   return { list, prefaceTitle: before ? before.title : null };
@@ -416,7 +417,7 @@ function boundsFromDocs(stream, book) {
     if (content[0].t === 'h' && content[0].text.length <= 100) { title = content[0].text; skip = 1; }
     else if (d.title && titleCount.get(d.title) === 1 && d.title.length <= 100) title = d.title;
     if (!title) title = docs.length === 1 ? (book.meta.title || book.fallbackTitle || '') : '';
-    list.push({ pos: d.pos, title: title || `Phần ${k}`, skip });
+    list.push({ pos: d.pos, title: title || `${t('chapter.part')} ${k}`, skip });
   });
   return { list, prefaceTitle: null };
 }

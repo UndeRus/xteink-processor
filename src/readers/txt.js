@@ -1,5 +1,6 @@
 // Đọc TXT: dò encoding, dòng trống tách đoạn, regex tựa chương.
 import { UserError, baseName, cleanText, looksLikeChapterTitle } from '../util.js';
+import { t } from '../i18n.js';
 
 export function decodeText(bytes) {
   if (bytes[0] === 0xFF && bytes[1] === 0xFE) return new TextDecoder('utf-16le').decode(bytes.subarray(2));
@@ -51,7 +52,7 @@ export function splitTxt(raw) {
 export async function readTxt(file) {
   const bytes = new Uint8Array(await file.arrayBuffer());
   const blocks = splitTxt(decodeText(bytes));
-  if (!blocks.length) throw new UserError('Tệp văn bản trống.');
+  if (!blocks.length) throw new UserError(t('err.txt.empty'));
   const doc = document.implementation.createHTMLDocument('');
   for (const b of blocks) {
     const el = doc.createElement(b.h ? 'h1' : 'p');

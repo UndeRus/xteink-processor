@@ -1,8 +1,8 @@
 {
   "name": "Xteink EPUB",
   "short_name": "Xteink EPUB",
-  "description": "Chuyển ebook sang EPUB tối giản cho máy đọc Xteink X3, chạy offline.",
-  "lang": "vi",
+  "description": "Convert ebooks to minimal EPUB for the Xteink X3 reader, works offline.",
+  "lang": "en",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

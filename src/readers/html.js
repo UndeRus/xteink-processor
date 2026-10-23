@@ -1,5 +1,6 @@
 // Đọc HTML đơn lẻ: một tài liệu, chương lấy từ heading hoặc regex.
 import { UserError, baseName, decodeMarkup } from '../util.js';
+import { t } from '../i18n.js';
 
 export async function readHtml(file) {
   const bytes = new Uint8Array(await file.arrayBuffer());
@@ -14,7 +15,7 @@ export async function readHtml(file) {
     }
   }
   const doc = new DOMParser().parseFromString(text, 'text/html');
-  if (!doc.body || !doc.body.textContent.trim()) throw new UserError('Tệp HTML không có nội dung.');
+  if (!doc.body || !doc.body.textContent.trim()) throw new UserError(t('err.html.empty'));
   const title = (doc.title || '').trim() || baseName(file.name);
   return { meta: { title }, cover: null, docs: [{ href: 'index.html', doc }], toc: [], tocDocHrefs: new Set(), fallbackTitle: title };
 }

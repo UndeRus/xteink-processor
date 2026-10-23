@@ -170,14 +170,15 @@ const NUM_WORDS = [
   'final', 'last',
 ];
 const END = '(?![a-z0-9à-ỹ])';
-const KEYWORDS = 'chương|hồi|phần|quyển|tập|chapter|part|book|volume';
+const KEYWORDS = 'chương|hồi|phần|quyển|tập|chapter|part|book|volume|глава|часть|книга|том|раздел';
 export const CHAPTER_RE = new RegExp(
   `^(?:${KEYWORDS})\\s+(?:\\d+|[ivxlcdm]+${END}|(?:${NUM_WORDS.join('|')})${END}(?:\\s+(?:${NUM_WORDS.join('|')})${END}){0,3})` +
   `(?:\\s*[.:)\\-–—]\\s*.{0,100}|\\s+.{0,80})?$`,
 );
 export const SPECIAL_RE = new RegExp(
   '^(?:lời nói đầu|lời giới thiệu|lời tựa|lời dẫn|mở đầu|giới thiệu|phần kết|kết luận|phụ lục|' +
-  'prologue|epilogue|introduction|preface|foreword|afterword|conclusion|appendix)\\s*[.:]?$',
+  'prologue|epilogue|introduction|preface|foreword|afterword|conclusion|appendix|' +
+  'пролог|эпилог|введение|предисловие|послесловие|заключение|приложение)\\s*[.:]?$',
 );
 
 /** Dòng ngắn đứng riêng có giống tiêu đề chương không? */

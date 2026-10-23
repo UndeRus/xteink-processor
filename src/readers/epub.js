@@ -1,5 +1,6 @@
 // Đọc EPUB: spine theo OPF, TOC từ NCX/nav, tìm ảnh bìa.
 import { UserError, decodeMarkup, parseXml, parseMarkup, resolvePath, tick, baseName } from '../util.js';
+import { t } from '../i18n.js';
 
 const MIME_BY_EXT = {
   jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', gif: 'image/gif',
@@ -22,7 +23,7 @@ export async function readEpub(file, report) {
   try {
     zip = await JSZip.loadAsync(await file.arrayBuffer());
   } catch {
-    throw new UserError('Tệp EPUB bị hỏng hoặc không phải là tệp ZIP hợp lệ.');
+    throw new UserError(t('err.epub.broken'));
   }
   const names = Object.keys(zip.files);
   const lookup = new Map(names.map(n => [n.toLowerCase(), n]));
@@ -35,7 +36,7 @@ export async function readEpub(file, report) {
   if (names.some(n => /META-INF\/encryption\.xml$/i.test(n))) {
     const enc = await readText('META-INF/encryption.xml');
     if (enc && /EncryptionMethod/i.test(enc) && !/IDPF\.org\/2008\/embedding|obfuscation/i.test(enc)) {
-      throw new UserError('Sách này được bảo vệ bản quyền (DRM) nên không thể chuyển đổi.');
+      throw new UserError(t('err.epub.drm'));
     }
   }
 
@@ -48,10 +49,10 @@ export async function readEpub(file, report) {
     if (rf) opfPath = rf.getAttribute('full-path');
   }
   if (!opfPath) opfPath = names.find(n => /\.opf$/i.test(n));
-  if (!opfPath) throw new UserError('Không tìm thấy nội dung sách trong tệp EPUB.');
+  if (!opfPath) throw new UserError(t('err.epub.nocontent'));
   const opfText = await readText(opfPath);
   const opf = opfText && parseXml(opfText);
-  if (!opf) throw new UserError('Tệp EPUB có phần mô tả (OPF) bị lỗi.');
+  if (!opf) throw new UserError(t('err.epub.badopf'));
 
   const manifest = new Map();
   for (const it of byLocalName(opf, 'item')) {
@@ -80,7 +81,7 @@ export async function readEpub(file, report) {
     .filter(x => x.item && isMarkupType(x.item.type, x.item.path));
   const linearItems = items.filter(x => x.linear);
   if (linearItems.length) items = linearItems;
-  if (!items.length) throw new UserError('Sách EPUB không có nội dung để chuyển đổi.');
+  if (!items.length) throw new UserError(t('err.epub.nospine'));
 
   // --- trang mục lục trong nội dung
   const tocDocHrefs = new Set();
